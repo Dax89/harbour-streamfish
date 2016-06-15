@@ -5,10 +5,11 @@ import "../../components/mediaplayer"
 
 Page
 {
+    readonly property bool playerActive: true
     property var channel
 
     id: mediaplayerpage
-    orientation: Orientation.Landscape | Orientation.LandscapeInverted
+    allowedOrientations : Orientation.Landscape | Orientation.LandscapeInverted
 
     states: [ State { name: "error"
                       PropertyChanges { target: mperror; showError: true }
@@ -92,5 +93,35 @@ Page
         }
 
         MediaPlayerError { id: mperror; anchors.fill: parent; errorMessage: video.errorString }
+    }
+
+    CoverActionList /* Media Player Cover Actions */
+    {
+        enabled: (mediaplayerpage.state !== "error")
+        iconBackground: true
+
+        CoverAction
+        {
+            iconSource: video.playbackState === MediaPlayer.PlayingState ? "image://theme/icon-cover-pause" : "image://theme/icon-cover-play"
+            onTriggered: video.playbackState === MediaPlayer.PlayingState ? video.pause() : video.play();
+        }
+
+        CoverAction
+        {
+            iconSource: "image://theme/icon-cover-cancel"
+            onTriggered: pageStack.pop()
+        }
+    }
+
+    CoverActionList /* Media Player Fallback Cover Actions */
+    {
+        enabled: (mediaplayerpage.state === "error")
+        iconBackground: true
+
+        CoverAction
+        {
+            iconSource: "image://theme/icon-cover-cancel"
+            onTriggered: pageStack.pop()
+        }
     }
 }

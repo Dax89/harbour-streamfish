@@ -16,7 +16,12 @@ ApplicationWindow
     id: mainwindow
     allowedOrientations: Orientation.All
     _defaultPageOrientations: Orientation.All
-
     initialPage: Component { PlaylistsPage { } }
-    cover: Qt.resolvedUrl("cover/CoverPage.qml")
+
+    cover: {
+        if(pageStack.currentPage.playerActive !== true)
+            return Qt.resolvedUrl("cover/CoverPage.qml");
+
+        return undefined;
+    }
 }
