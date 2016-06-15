@@ -24,10 +24,7 @@ bool M3UParser::parse(const QString &m3udata, QList<M3UChannel *> &channels, QOb
     {
         QString line = lines[i].trimmed();
 
-        if((i == 0) && (line != "#EXTM3U"))
-            return this->error(tr("Invalid M3U playlist"));
-
-        if(line == "#EXTM3U") // Skip header
+        if(line == "#EXTM3U") // Skip header, if any
             continue;
 
         if(line.startsWith("#EXTINF"))
@@ -58,6 +55,9 @@ bool M3UParser::parse(const QString &m3udata, QList<M3UChannel *> &channels, QOb
             extinfdone = false;
         }
     }
+
+    if(channels.isEmpty())
+        return this->error(tr("Invalid M3U playlist"));
 
     return true;
 }
